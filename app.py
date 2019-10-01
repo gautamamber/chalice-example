@@ -15,7 +15,7 @@ cors_config = CORSConfig(
     expose_headers=['X-Special-Header'],
     allow_credentials=True
 )
-
+table = dynamo.Table("usertable")
 OBJECTS = {}
 @app.route('/')
 def index():
@@ -73,16 +73,30 @@ def support_cors():
 # Add data to dynamoDB
 @app.route('/add-user', methods = ['POST'], cors = cors_config)
 def add_user():
-    table = dynamo.Table("usertable")
     table.put_item(
         Item = {
             "username": str(uuid.uuid4()),
-            "name": "Amber gautam",
+            "name": "Mark Lyn",
             "age": 23,
-            "city": "Noida"
+            "city": "NYC"
         }
     )
     data = {
         "result": "Success"
     }
     return data
+
+# Get item from dyanamo
+
+@app.route('/get-user/{username}', methods = ['GET'])
+def get_user(username):
+    request = app.current_request
+    if request.method == "GET":
+        data = table.get_item(
+            Key = {
+                "username": username
+            }
+        )
+    return {
+        "result" : data
+    }
