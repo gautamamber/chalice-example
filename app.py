@@ -1,4 +1,4 @@
-from chalice import Chalice
+from chalice import Chalice, Response
 from chalice import BadRequestError, NotFoundError
 
 app = Chalice(app_name='helloworld')
@@ -42,3 +42,11 @@ def myobject(key):
             return {key: OBJECTS[key]}
         except KeyError:
             raise NotFoundError(key)
+    
+@app.route('/custom-response')
+def custom_response():
+    return Response(
+        body = "Hello world",
+        status_code = 200,
+        headers = {"Content-Type" : "text/plain"}
+    )
