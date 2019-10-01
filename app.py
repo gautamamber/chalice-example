@@ -21,3 +21,10 @@ def state_of_city(city):
         return {"state": CITIES_OF_STATE[city]}
     except KeyError:
         raise BadRequestError("Unknown city '%s', valid choices are: %s" % (city, ','.join(CITIES_OF_STATE.keys())))
+
+@app.route('/resource/{value}', methods=['PUT'])
+def put_test(value):
+    data = {
+        "value" : value
+    }
+    return data
