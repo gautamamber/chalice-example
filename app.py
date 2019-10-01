@@ -2,6 +2,7 @@ from chalice import Chalice, Response, CORSConfig
 from chalice import BadRequestError, NotFoundError
 import boto3
 import uuid
+from constant import ConstantMessages
 
 dynamo = boto3.resource("dynamodb")
 
@@ -15,7 +16,7 @@ cors_config = CORSConfig(
     expose_headers=['X-Special-Header'],
     allow_credentials=True
 )
-table = dynamo.Table("usertable")
+table = dynamo.Table(ConstantMessages.TABLE_NAME)
 OBJECTS = {}
 @app.route('/')
 def index():
@@ -47,7 +48,6 @@ def put_test(value):
 @app.route('/objects/{key}', methods = ['GET', 'PUT'])
 def myobject(key):
     request = app.current_request
-    print(request.json_body)
     if request.method == 'PUT':
         OBJECTS[key] = request.json_body
     elif request.method == 'GET':
@@ -82,7 +82,7 @@ def add_user():
         }
     )
     data = {
-        "result": "Success"
+        "result": ConstantMessages.SUCCESS
     }
     return data
 
