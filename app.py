@@ -1,5 +1,9 @@
 from chalice import Chalice, Response, CORSConfig
 from chalice import BadRequestError, NotFoundError
+import boto3
+import uuid
+
+dynamo = boto3.resource("dynamodb")
 
 app = Chalice(app_name='helloworld')
 app.debug = True
@@ -65,3 +69,20 @@ def support_cors():
     return {
         "cors": True
     }
+
+# Add data to dynamoDB
+@app.route('/add-user', methods = ['POST'], cors = cors_config)
+def add_user():
+    table = dynamo.Table("usertable")
+    table.put_item(
+        Item = {
+            "username": str(uuid.uuid4()),
+            "name": "Amber gautam",
+            "age": 23,
+            "city": "Noida"
+        }
+    )
+    data = {
+        "result": "Success"
+    }
+    return data
