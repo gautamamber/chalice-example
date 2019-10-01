@@ -100,3 +100,12 @@ def get_user(username):
     return {
         "result" : data
     }
+
+@app.route('/list-all', methods = ['GET'])
+def list_all():
+    request = app.current_request
+    if request.method == "GET":
+        data = table.scan()
+        return {
+            "result": data
+        }
