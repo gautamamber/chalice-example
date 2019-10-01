@@ -1,8 +1,17 @@
-from chalice import Chalice, Response
+from chalice import Chalice, Response, CORSConfig
 from chalice import BadRequestError, NotFoundError
 
 app = Chalice(app_name='helloworld')
 app.debug = True
+
+cors_config = CORSConfig(
+    allow_origin='*',
+    allow_headers=['X-Special-Header'],
+    max_age=600,
+    expose_headers=['X-Special-Header'],
+    allow_credentials=True
+)
+
 OBJECTS = {}
 @app.route('/')
 def index():
@@ -50,3 +59,9 @@ def custom_response():
         status_code = 200,
         headers = {"Content-Type" : "text/plain"}
     )
+
+@app.route('/custom-cors', methods = ['GET'], cors = cors_config)
+def support_cors():
+    return {
+        "cors": True
+    }
